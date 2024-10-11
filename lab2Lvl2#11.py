@@ -12,6 +12,6 @@ while i<n:
     s=s+a
     i+=1
     z=s/n
-    if a<=25:
+    if a<=2.5:
         f+=1
 print('AvergeScore:', z, ',', 'DidNotPass:', f)
