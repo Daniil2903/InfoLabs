@@ -1,0 +1,10 @@
+#удалить повторяющиеся элементы
+m=[1, 3, 76, 5, 65, 3, 3, 5, 4]
+t=[]
+s=1
+for i in range(len(m)):
+    if m[i]==m[s]:
+        t.append(i)
+for i in range(len(t)):
+    m.remove(m[t[i]])
+print(m)
