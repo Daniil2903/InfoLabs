@@ -22,14 +22,3 @@ def info(self):
 print('Список спортсменов в порядке убывания:')
 for i in range(len(t)):
     info(t[i])
-##for i in range(-len(t)):
-##    if summing(Gleb)==t[i]:
-##        print('sieg heil')
-##    elif summing(Oleg)==t[i]:
-##        print('AllJewsRIllegal')
-##    elif summing(Timur)==t[i]:
-##        print("I'llGoTomorrowAndSayToSonyaThatIWannaBeWithHere,SheIsSoAesthetic")
-##from tabulate import tabulate as tab
-##head=['Sportsman', 'Result']
-##table=[['Tor'],['Wet', 23]]
-##print(tab(table, headers=hed, tablefmt='grd'))
