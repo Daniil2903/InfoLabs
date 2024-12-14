@@ -38,7 +38,13 @@ for i in range(len(t)-1):
         t[i], t[i+1]=t[i+1], t[i]
 print('Крутые мужики:')
 for i in range(len(t)):
-    info(t[i])
+    if i==0:
+        print('Порядок приоритетности:', i+1)
+        info(t[i])
+    else:
+        print('')
+        print('Порядок приоритетности:', i+1)
+        info(t[i])
 
 
 
