@@ -1,3 +1,4 @@
+#Даны результаты спортсменов, вывести последних с результатами согласно их местам 
 class sportsmen:
     def __init__(self, surname, team, first_try, second_try):
         self.surname=surname
