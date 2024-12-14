@@ -22,4 +22,10 @@ def info(self):
     print('Фамилия:',self.surname, ',', 'Команда:', self.team, ',', 'Первая попытка:', self.first_try,',', 'Вторая попытка:', self.second_try)
 print('Список спортсменов в порядке убывания:')
 for i in range(len(t)):
-    info(t[i])
+    if i==0:
+        print('Место:',i+1)
+        info(t[i])
+    else:
+        print('')
+        print('Место:',i+1)
+        info(t[i])
