@@ -13,18 +13,14 @@ s=0
 if len(a)-pivo(a)>len(b)-pivo(b):
     for i in range(pivo(a)+1, len(a)):
         s=s+a[i]
+        s=s/2
     a[pivo(a)]=s
-    b[pivo(b)]=s
     print('Массив А:', a, ',', 'Массив Б:', b)
-elif len(a)-pivo(a)<len(b)-pivo(b):
+else:
     for i in range(pivo(b)+1, len(b)):
         s=s+b[i]
-    a[pivo(a)]=s
+        s=s/2
     b[pivo(b)]=s
     print('Массив А:', a, ',', 'Массив Б:', b)
-elif len(a)-pivo(a)==len(b)-pivo(b):
-    for i in range(pivo(a)+1, len(a)):
-        s=s+m[i]
-    print('Расстояния одинаковые, поэтому ничего не меняем:', 'Массив А:', a, ',', 'Массив Б:', b)
 
     
