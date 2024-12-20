@@ -29,7 +29,7 @@ elif len(a)-pivo(a)==len(b)-pivo(b):
     s=s/(len(a)-pivo(a))
     a[pivo(a)]=s
     for i in range(pivo(b)+1, len(b), 1):
-        z=s+b[i]
-    z=s/(len(b)-pivo(b))
+        z=z+b[i]
+    z=z/(len(b)-pivo(b))
     b[pivo(b)]=z
     print('Массив А:', a, ',', 'Массив Б:', b)
