@@ -1,3 +1,4 @@
+##в матрице 5х7 заменить 4 столбец на столбец, содержащий максимальные жлесменты строк в обратном порядке(максимальный элемент 1 строки стоит на 5 строке в 4 столбце и т.д.)
 print('Old matrix')
 m=[[1,2,3,4,5,6,7],
    [23,4,4,5,6,7,9],
@@ -8,16 +9,6 @@ for y in m:
     for t in y:
         print(f'{t:>5}',end='')
     print('')
-##def pivo(m, i):
-##    maxi=0
-##    for j in range(len(m[0])):
-##        if m[i][t]>maxi:
-##            maxi=m[i][j]
-##        m[4][len(m)-(1+i)]=maxi
-##    return(m)
-##i=1
-##print(pivo(m, i))
-t=[]
 for i in range(len(m)):
     maxi=0
     for j in range(len(m[0])):
