@@ -10,15 +10,26 @@ def pivo(a):
             indi=i
     return(indi)
 s=0
+z=0
 if len(a)-pivo(a)>len(b)-pivo(b):
     for i in range(pivo(a)+1, len(a), 1):
         s=s+a[i]
     s=s/(len(a)-pivo(a))
     a[pivo(a)]=s
     print('Массив А:', a, ',', 'Массив Б:', b)
-else:
+elif len(a)-pivo(a)<len(b)-pivo(b):
     for i in range(pivo(b)+1, len(b), 1):
         s=s+b[i]
     s=s/(len(b)-pivo(b))
     b[pivo(b)]=s
+    print('Массив А:', a, ',', 'Массив Б:', b)
+elif len(a)-pivo(a)==len(b)-pivo(b):
+    for i in range(pivo(a)+1, len(a), 1):
+        s=s+a[i]
+    s=s/(len(a)-pivo(a))
+    a[pivo(a)]=s
+    for i in range(pivo(b)+1, len(b), 1):
+        z=s+b[i]
+    z=s/(len(b)-pivo(b))
+    b[pivo(b)]=z
     print('Массив А:', a, ',', 'Массив Б:', b)
