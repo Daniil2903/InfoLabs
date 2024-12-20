@@ -11,16 +11,14 @@ def pivo(a):
     return(indi)
 s=0
 if len(a)-pivo(a)>len(b)-pivo(b):
-    for i in range(pivo(a)+1, len(a)):
+    for i in range(pivo(a)+1, len(a), 1):
         s=s+a[i]
-        s=s/2
+    s=s/(len(a)-pivo(a))
     a[pivo(a)]=s
     print('Массив А:', a, ',', 'Массив Б:', b)
 else:
-    for i in range(pivo(b)+1, len(b)):
+    for i in range(pivo(b)+1, len(b), 1):
         s=s+b[i]
-        s=s/2
+    s=s/(len(b)-pivo(b))
     b[pivo(b)]=s
     print('Массив А:', a, ',', 'Массив Б:', b)
-
-    
