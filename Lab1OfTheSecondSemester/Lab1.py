@@ -69,29 +69,6 @@ for i in range(len(y_predict1)):
         sovp+=1
 accuracy=sovp/len(y_predict1)
 print(accuracy)
-plt.figure(figsize=(10, 6))
-train_0 = [p for p, lbl in zip(x_train, y_train) if lbl == 0]
-plt.scatter([p[0] for p in train_0], 
-            [p[1] for p in train_0],
-            c='blue', marker='o', s=80, label='Обучение класс 0')
-train_1 = [p for p, lbl in zip(x_train, y_train) if lbl == 1]
-plt.scatter([p[0] for p in train_1], 
-            [p[1] for p in train_1],
-            c='blue', marker='x', s=80, label='Обучение класс 1')
-for i in range(len(x_test)):
-    true_label = y_test[i]
-    pred_label = y_predict1[i]
-    color = 'green' if y_test[i] == y_predict1[i] else 'red'
-    marker = 'o' if y_predict1[i] == 0 else 'x'
-    plt.scatter(x_test[i][0], x_test[i][1],
-                c=color, marker=marker, s=80)
-plt.title(f'Классификация k-NN (точность: {accuracy:.2f})')
-plt.xlabel('X координата')
-plt.ylabel('Y координата')
-plt.legend()
-plt.grid(True)
-plt.tight_layout()
-plt.show()
 
 
 
