@@ -13,7 +13,6 @@ plt.show()
 reg=linear_model.LinearRegression()
 reg.fit(df[['area']],df.price)
 print(reg.predict([[38]]))
-
 print(reg.predict(df[['area']]))
 print(reg.coef_)
 print(reg.intercept_)
