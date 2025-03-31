@@ -72,25 +72,44 @@ print('Accuracy', accuracy)
 import matplotlib.pyplot as plt
 plt.figure(figsize=(10, 6))
 train_0=[p for p, lbl in zip(x_train, y_train) if lbl==0]
-plt.scatter([p[0] for p in train_0], 
-            [p[1] for p in train_0],
-            c='blue', marker='o', s=80, label='Обучение, класс "0"')
-train_1=[p for p, lbl in zip(x_train, y_train) if lbl==1]
-plt.scatter([p[0] for p in train_1], 
-            [p[1] for p in train_1],
-            c='blue', marker='x', s=80, label='Обучение, класс "1"')
-for i in range(len(x_test)):
-    true_label=y_test[i]
-    pred_label=y_predict1[i]
-    color='green' if y_test[i]==y_predict1[i] else 'red'
-    marker='o' if y_predict1[i]==0 else 'x'
-    plt.scatter(x_test[i][0], x_test[i][1],
-                c=color, marker=marker, s=80)
-plt.title(f'Точность: {accuracy:.2f}')
-plt.xlabel('Абсицисса')
-plt.ylabel('Ордината')
-plt.legend()
-plt.show()
+def plot_results(x_train, y_train, x_test, y_test, y_predict):
+    plt.figure(figsize=(10, 7))
+    train_0 = [p for p, lbl in zip(x_train, y_train) if lbl == 0]
+    train_1 = [p for p, lbl in zip(x_train, y_train) if lbl == 1]
+    if train_0:  # Проверка на пустой список
+        plt.scatter(*zip(*train_0), c='blue', marker='o', label='Train 0')
+    if train_1:
+        plt.scatter(*zip(*train_1), c='blue', marker='x', label='Train 1')
+    correct_0 = []
+    correct_1 = []
+    wrong_0 = []
+    wrong_1 = []
+    for i in range(len(x_test)):
+        point = x_test[i]
+        true_lbl = y_test[i]
+        pred_lbl = y_predict[i]
+        if true_lbl == pred_lbl:
+            if true_lbl == 0:
+                correct_0.append(point)
+            else:
+                correct_1.append(point)
+        else:
+            if true_lbl == 0:
+                wrong_0.append(point)
+            else:
+                wrong_1.append(point)
+    if correct_0:
+        plt.scatter(*zip(*correct_0), c='green', marker='o', alpha=0.6, label='Correct 0')
+    if correct_1:
+        plt.scatter(*zip(*correct_1), c='green', marker='x', alpha=0.6, label='Correct 1')
+    if wrong_0:
+        plt.scatter(*zip(*wrong_0), c='red', marker='o', alpha=0.6, label='Wrong 0')
+    if wrong_1:
+        plt.scatter(*zip(*wrong_1), c='red', marker='x', alpha=0.6, label='Wrong 1')
+    plt.title(f'Точность={accuracy:.2f}')
+    plt.legend()
+    plt.show()
+plot_results(x_train, y_train, x_test, y_test, y_predict)
 
 
 
