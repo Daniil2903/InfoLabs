@@ -68,7 +68,7 @@ for i in range(len(y_predict1)):
     if y_predict1[i]==y_test[i]:
         sovp+=1
 accuracy=sovp/len(y_predict1)
-print(accuracy)
+print('Accuracy', accuracy)
 import matplotlib.pyplot as plt
 plt.figure(figsize=(10, 6))
 train_0=[p for p, lbl in zip(x_train, y_train) if lbl==0]
