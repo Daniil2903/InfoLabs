@@ -74,9 +74,9 @@ def plot_results(x_train, y_train, x_test, y_test, y_predict1):
     train_0 = [p for p, lbl in zip(x_train, y_train) if lbl == 0]
     train_1 = [p for p, lbl in zip(x_train, y_train) if lbl == 1]
     if train_0:
-        plt.scatter(*zip(*train_0), c='blue', marker='o', label='Тренеровочный ноль')
+        plt.scatter(*zip(*train_0), c='blue', marker='o', label='Тренировочный ноль')
     if train_1:
-        plt.scatter(*zip(*train_1), c='blue', marker='x', label='Тренеровочная единица')
+        plt.scatter(*zip(*train_1), c='blue', marker='x', label='Тренировочная единица')
     correct_0 = []
     correct_1 = []
     wrong_0 = []
