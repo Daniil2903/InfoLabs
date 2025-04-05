@@ -1,38 +1,65 @@
-coord=[[0,1],[2,4],[2.34,43], [43,4.3],[34,8], [9,2], [90,89],[67,89]]
 import matplotlib.pyplot as plt
 import numpy as np
-x1=[]
-y1=[]
-for i in range(len(coord)):
-    x1.append(coord[i][0])
-    y1.append(coord[i][1])
-fig, ax=plt.subplots()
-ax.scatter(x1, y1)
-plt.show()
+from ipywidgets import interact, IntSlider
+np.random.seed(1)
+num_points=50
+x_min, x_max=0, 100
+y_min, y_max=0, 100
+coord=[[np.random.uniform(x_min, x_max), np.random.uniform(y_min, y_max)] for _ in range(num_points)]
+x1=[point[0] for point in coord]
+y1=[point[1] for point in coord]
 k=4
-random_points=[[1,3],[3,2],[32,90],[90,14.8]]
-x_min=min(x1)
-x_max=max(x1)
-y_min=min(y1)
-y_max=max(x1)
-dist1=[]
-dist2=[]
-dist3=[]
-dist4=[]
-for i in range(len(coord)):
-    dist1.append(((random_points[0][0]-x1[i])**2+(random_points[0][1]-y1[i])**2)**0.5)
-    dist2.append(((random_points[1][0]-x1[i])**2+(random_points[1][1]-y1[i])**2)**0.5)
-    dist3.append(((random_points[2][0]-x1[i])**2+(random_points[2][1]-y1[i])**2)**0.5)
-    dist4.append(((random_points[3][0]-x1[i])**2+(random_points[3][1]-y1[i])**2)**0.5)
-claster=[]
-for i in range(len(coord)):
-    if dist1[i]< dist2[i] and dist1[i]< dist3[i] and dist1[i]< dist4[i]:
-        claster.append(1)
-    elif dist2[i]< dist2[i] and dist2[i]< dist3[i] and dist2[i]< dist4[i]:
-        claster.append(2)
-    elif dist3[i]< dist1[i] and dist3[i]< dist2[i] and dist3[i]< dist4[i]:
-        claster.append(3)
-    elif dist4[i]< dist1[i] and dist4[i]< dist2[i] and dist4[i]< dist3[i]:
-        claster.append(4)
-print(claster)
-        
+random_points=[
+    [np.random.uniform(x_min, x_max), np.random.uniform(y_min, y_max)] for _ in range(k)
+]
+def kmeans_with_history():
+    centers = random_points.copy()
+    max_iterations=100
+    threshold=0.01
+    iteration=0
+    history_centers=[centers.copy()]
+    history_clusters=[]
+    while True:
+        iteration+=1
+        old_centers=centers.copy()
+        clusters=[[] for _ in range(k)]
+        for i in range(len(coord)):
+            distances=[
+                ((centers[j][0]-x1[i])**2+(centers[j][1]-y1[i])** 2)**0.5
+                for j in range(k)
+            ]
+            cluster_index=distances.index(min(distances))
+            clusters[cluster_index].append(coord[i])
+        history_clusters.append(clusters)
+        for j in range(k):
+            if clusters[j]: 
+                center_x=sum(point[0] for point in clusters[j]) / len(clusters[j])
+                center_y=sum(point[1] for point in clusters[j]) / len(clusters[j])
+                centers[j]=[center_x, center_y]
+        history_centers.append(centers.copy())
+        max_shift=max(
+            ((old_centers[j][0]-centers[j][0])**2+(old_centers[j][1]-centers[j][1])**2)**0.5
+            for j in range(k)
+        )
+        if max_shift<threshold or iteration>= max_iterations:
+            break
+    return history_centers, history_clusters, iteration
+history_centers, history_clusters, total_iterations=kmeans_with_history()
+def visualize_kmeans(iteration):
+    centers=history_centers[iteration]
+    clusters=history_clusters[iteration]
+    plt.figure(figsize=(8,6))
+    colors=['red', 'blue', 'green', 'purple']
+    for j in range(k):
+        if clusters[j]:
+            cluster_x=[point[0] for point in clusters[j]]
+            cluster_y=[point[1] for point in clusters[j]]
+            plt.scatter(cluster_x, cluster_y, color=colors[j], label=f'Кластер {j + 1}')
+    center_x=[center[0] for center in centers]
+    center_y=[center[1] for center in centers]
+    plt.scatter(center_x, center_y, color='black', marker='x', s=100, label='Центры кластеров')
+    plt.title(f"Итерация {iteration + 1}")
+    plt.legend()
+    plt.show()
+slider=IntSlider(min=0, max=total_iterations - 1, step=1, value=0, description='Итерация:')
+interact(visualize_kmeans, iteration=slider)
