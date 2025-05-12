@@ -1,24 +1,99 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
-a = float(input("Введите истинное значение a: "))
-b = float(input("Введите истинное значение b: "))
-c = float(input("Введите истинное значение c: "))
-speed = 0.00001
-epochs = 100
-x = np.linspace(-50, 50, 200)
-e = np.random.uniform(-3, 3, size=x.shape)
-y = a* x**2 + b* x + c + e
-def y_pred(x, a, b, c):
-    return a * x**2 + b * x + c
-def mse(a, b, c, y):
-    mse1=[]
-    mse=0
-    for i in range(len(y)):
-        mse1.append((y[i]-y_pred(x, a, b, c))**2)
-        mse=mse+mse1[i]/len(y)
-    return mse
-mse_true=mse(a, b, c, y)
-print(mse_true)
+import random
 
+# Генерация исходных данных
+def generate_data(a, b, c, x_min=-10, x_max=10, points=100):
+    x = np.linspace(x_min, x_max, points)
+    y = a*x**2 + b*x + c + np.array([random.uniform(-3, 3) for _ in range(points)])
+    return x, y
 
+# Параметры квадратичной функции (истинные значения)
+true_a = 0.5
+true_b = -2
+true_c = 5
+
+# Генерация данных
+x, y = generate_data(true_a, true_b, true_c)
+
+# Функции для вычисления производных и MSE
+def get_dk(x, y, k, b):
+    return (2/len(x)) * np.sum(x * ((k*x + b) - y))
+
+def get_db(x, y, k, b):
+    return (2/len(x)) * np.sum((k*x + b) - y)
+
+def mse(x, y, k, b):
+    return (1/len(x)) * np.sum(((k*x + b) - y)**2)
+
+# Градиентный спуск
+def fit(x, y, speed=0.001, epochs=1000, k0=0, b0=0):
+    k = k0
+    b = b0
+    k_list = [k]
+    b_list = [b]
+    mse_list = [mse(x, y, k, b)]
+    
+    for _ in range(epochs):
+        dk = get_dk(x, y, k, b)
+        db = get_db(x, y, k, b)
+        k = k - speed * dk
+        b = b - speed * db
+        k_list.append(k)
+        b_list.append(b)
+        mse_list.append(mse(x, y, k, b))
+    
+    return k_list, b_list, mse_list
+
+# Параметры обучения
+speed = 0.001
+epochs = 1000
+k0 = 0
+b0 = 0
+
+# Обучение модели
+k_list, b_list, mse_list = fit(x, y, speed, epochs, k0, b0)
+
+# Визуализация
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+plt.subplots_adjust(bottom=0.25)
+
+# Исходные данные
+ax1.scatter(x, y, color='blue', label='Исходные данные')
+ax1.set_xlabel('x')
+ax1.set_ylabel('y')
+ax1.set_title('Аппроксимация линейной регрессии')
+
+# Кривая MSE
+ax2.plot(range(epochs+1), mse_list, color='red')
+ax2.set_xlabel('Эпоха')
+ax2.set_ylabel('MSE')
+ax2.set_title('Изменение MSE в процессе обучения')
+
+# Начальная линия регрессии
+line, = ax1.plot(x, k_list[0]*x + b_list[0], color='red', label='Линейная регрессия')
+ax1.legend()
+
+# Создание слайдера
+ax_slider = plt.axes([0.2, 0.1, 0.6, 0.03])
+slider = Slider(ax_slider, 'Эпоха', 0, epochs, valinit=0, valstep=1)
+
+# Обновление графика при изменении слайдера
+def update(val):
+    epoch = int(slider.val)
+    k = k_list[epoch]
+    b = b_list[epoch]
+    line.set_ydata(k*x + b)
+    ax1.set_title(f'Аппроксимация (эпоха {epoch}), k={k:.2f}, b={b:.2f}, MSE={mse_list[epoch]:.2f}')
+    fig.canvas.draw_idle()
+
+slider.on_changed(update)
+
+plt.show()
+
+# Вывод финальных коэффициентов
+final_k = k_list[-1]
+final_b = b_list[-1]
+print(f"Финальные коэффициенты: k = {final_k:.4f}, b = {final_b:.4f}")
+print(f"Финальное MSE: {mse_list[-1]:.4f}")
