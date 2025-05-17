@@ -15,15 +15,14 @@ def predict(x, a, b, c):
 def mse(y_true, y_pred):
     return np.mean((y_true - y_pred) ** 2)
 def gradient(x, y, a, b, c):
-    error = predict(x, a, b, c) - y
-    da = (2 / len(x)) * np.dot(error, x**2)
-    db = (2 / len(x)) * np.dot(error, x)
-    dc = (2 / len(x)) * np.sum(error)
+    pogr = predict(x, a, b, c) - y
+    da = (2 / len(x)) * np.dot(pogr, x**2)
+    db = (2 / len(x)) * np.dot(pogr, x)
+    dc = (2 / len(x)) * np.sum(pogr)
     return da, db, dc
-def fit(x, y, speed=0.001, epochs=1000, a0=0, b0=0, c0=0):
+def fit(x, y, speed=0.001, epochs=100, a0=0, b0=0, c0=0):
     a, b, c = a0, b0, c0
     a_list, b_list, c_list, mse_list = [a], [b], [c], [mse(y, predict(x, a, b, c))]
-    
     for _ in range(epochs):
         da, db, dc = gradient(x, y, a, b, c)
         a -= speed * da
