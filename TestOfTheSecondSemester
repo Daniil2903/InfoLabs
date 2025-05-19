@@ -1,0 +1,71 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Slider
+np.random.seed(42)
+x = np.arange(0, 10, 0.1)
+y_true = 2 * x + 3 * np.sin(1.5 * x)
+y = y_true + np.random.normal(0, 1, size=x.shape)
+class SGDRegressor:
+    def __init__(self, learning_rate=0.001, n_epochs=100, batch_size=32):
+        self.learning_rate = learning_rate
+        self.n_epochs = n_epochs
+        self.batch_size = batch_size
+        self.w = 0.1 * np.random.randn()
+        self.b = 0.1 * np.random.randn()
+        self.history = {'w': [], 'b': [], 'mape': []}
+    def fit(self, X, y):
+        n_samples = X.shape[0]
+        for epoch in range(self.n_epochs):
+            indices = np.random.permutation(n_samples)
+            X_shuffled = X[indices]
+            y_shuffled = y[indices]
+            for i in range(0, n_samples, self.batch_size):
+                X_batch = X_shuffled[i:i+self.batch_size]
+                y_batch = y_shuffled[i:i+self.batch_size]
+                y_pred = self.w * X_batch + self.b
+                grad_w = 2 * np.mean(X_batch * (y_pred - y_batch))
+                grad_b = 2 * np.mean(y_pred - y_batch)
+                self.w -= self.learning_rate * grad_w
+                self.b -= self.learning_rate * grad_b
+            y_pred_all = self.w * X + self.b
+            mape = np.mean(np.abs((y - y_pred_all) / y)) * 100
+            self.history['mape'].append(mape)
+            self.history['w'].append(self.w)
+            self.history['b'].append(self.b)
+        return self
+    def predict(self, X):
+        return self.w * X + self.b
+model = SGDRegressor(learning_rate=0.001, n_epochs=100)
+model.fit(x, y)
+fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 10), gridspec_kw={'height_ratios': [1, 2]})
+plt.subplots_adjust(bottom=0.2, hspace=0.3)
+ax1.plot(model.history['mape'], 'b-o', linewidth=2)
+ax1.set_xlabel('Epoch')
+ax1.set_ylabel('MAPE (%)')
+ax1.set_title('Изменение MAPE на разных эпохах')
+ax1.minorticks_on()
+ax1.grid(which='major', linestyle='-', linewidth='0.5', color='gray', alpha=0.7)
+ax1.grid(which='minor', linestyle=':', linewidth='0.5', color='lightgray', alpha=0.5)
+ax1.set_ylim(0, max(model.history['mape']) * 1.1)
+ax2.scatter(x, y, label='Данные с шумом')
+true_line, = ax2.plot(x, y_true, 'r-', linewidth=2, label=r'$y = 2x + 3\sin(1.5x)$')
+pred_line, = ax2.plot(x, model.predict(x), 'g-', linewidth=2, label='Предсказанная функция')
+ax2.legend()
+ax2.set_ylim(np.min(y)-1, np.max(y)+1)
+ax_slider = plt.axes([0.2, 0.05, 0.6, 0.03])
+epoch_slider = Slider(
+    ax=ax_slider,
+    label='Эпоха',
+    valmin=0,
+    valmax=len(model.history['mape']) - 1,
+    valinit=0,
+    valstep=1
+)
+def update(val):
+    epoch = int(epoch_slider.val)
+    w = model.history['w'][epoch]
+    b = model.history['b'][epoch]
+    pred_line.set_ydata(w * x + b)
+    fig.canvas.draw_idle()
+epoch_slider.on_changed(update)
+plt.show()
